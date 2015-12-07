@@ -70,7 +70,7 @@ If check(ops,S[i]):
 		Return invalid expression
 		N = false; #there is now an operator after the number, so we are ok
 		O = true; #operator flag on
-	If check(digit,S[i]):
+If check(digit,S[i]):
 		# if the last thing encountered was a number,with or without brackets and spaces in between,but with no operator in between.
 		If  N and S:			
 			return invalid expression
