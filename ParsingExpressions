@@ -1,0 +1,76 @@
+Expression Parsing:
+Theorem 1:
+Each operator reduces two numbers to 1, thus there should always be N-1 operators, no matter the arrangement of brackets. (Piazza said implicit multiplication with ()() will not occur)
+(3 + 5)* ( 5 – 1 ) 4 num, 3 op
+3+(5*(5-1)) 4 num, 3 op
+Exception:
+ When “-“ is used as a negative sign
+Theorem 2:
+No matter how you arrange the brackets, there must ALWAYS be an operator between two numbers
+
+Useful Functions:
+Global variables:
+bracket = [’(‘,’)’]
+ops = [’-‘,’+’,’*’,’/’]
+digit = [‘0’,’1’,’2’,’3’,’4’,’5’,’6’,’7’,’8’,’9’]
+Boolean check(array a,char c)
+	For o in a:
+		If c==o:
+			Return true
+	Return false
+
+
+Int BEDMAS(char c): # returns order of BEDMAS (1 if * or /, 0 if + or -
+	For int i = 0, i<len(ops) , i++:
+		If c==o:
+			Return i/2;
+	Return -1 # not an operator
+
+•	Step 1:
+
+Fundamental Character check:
+S = “some expression here”
+B = 0  #bracket counter (integer)
+index = 0
+For character c in S:
+	If (not check(ops,c)) and (not check(digit,c)) and (not check(bracket,c)) and not (c==’ ‘):
+		Return Invalid expression
+	If c is ‘(’ :
+		B+=1 #Bracket level increased
+	If c is ‘)’:
+		B -= 1 #Bracket level decreased
+	
+	Index++
+End of  Loop
+If B != 0: #open brackets, or too many closed brackets (brackets didn’t match)
+	Return invalid expression
+#First Character checks:
+If S[0] is ‘+’,’*’ or ‘/’:
+	Return invalid expression
+#Last Character Check:
+If S[length(s)-1] is ‘-‘,’+’,’*’ or ‘/’:
+	Return invalid expression
+
+
+
+
+
+
+•	Step 2 function for expression checking:
+At this point we assume there was no invalid characters and brackets match.
+S = “some expression with valid characters and closed brackets”
+Boolean O = operator flag, false initially
+Boolean N = number flag, false initially
+Boolean S = space flag, false initially
+Boolean B = bracket flag, false initially #for checking empty brackets with no numbers i.e. ((())) is not valid
+
+For int i = 0, i < len(S),i++:
+If check(ops,S[i]):
+	If O and not(S[i]==’-‘): #two operators in a row and not *- , /-,+- or --
+		Return invalid expression
+		N = false; #there is now an operator after the number, so we are ok
+		O = true; #operator flag on
+	If check(digit,S[i]):
+		# if the last thing encountered was a number,with or without brackets and spaces in between,but with no operator in between.
+		If  N and S:			
+			return invalid expression
