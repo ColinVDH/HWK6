@@ -25,6 +25,24 @@ Int BEDMAS(char c): # returns order of BEDMAS (1 if * or /, 0 if + or -
 		If c==o:
 			Return i/2;
 	Return -1 # not an operator
+	
+#this function looks ahead in a string and returns how many spaces away it is from resolving the current stack of brackets
+Int brackClose(String S):
+	int stack = 0;
+	for int i = 0,i<len(S);i++:
+	If S[i] is ‘(’ :
+		stack+=1 #Bracket level increased
+	If S[i] is ‘)’:
+		stack -= 1 #Bracket level decreased
+		if stack == 0:
+			return i #returns the index at which the entire bracket stack was cleared
+	return -1 #something bad happened
+
+#This function strips away the outer brackets of an expression, i.e. "((((((3+4)))))) becomes 3+4
+String strip(String S):
+	while S[0] =="(" and brackClose(S) == length(S)-1:
+		S = S[1:length(S)-2] #inclusive
+	return S
 
 •	Step 1:
 
@@ -61,11 +79,11 @@ At this point we assume there was no invalid characters and brackets match.
 
 S = “some expression with valid characters and closed brackets”
 
-expChk(S):
+boolean expChk(S):
 	Boolean O = operator flag, false initially #unresolve operator flag
 	Boolean N = number flag, false initially
 	Boolean S = space flag, false initially
-
+	Boolean carry = true #used for recursive calls	
 
 	For int i = 0, i < len(S),i++:
 	#This code should use the flags to verify current character in relation to what came before it
@@ -76,7 +94,7 @@ expChk(S):
 		O = true; #operator flag on
 		S = false;# dont care about spaces before this point now
 			
-	If check(digit,S[i]):
+	else If check(digit,S[i]):
 			# if the last thing encountered was a number,with or without brackets and spaces in between,but with no operator in between.
 			If  N and S:			
 				return invalid expression
@@ -84,3 +102,16 @@ expChk(S):
 				O = false #there is now a number after the operator, we are ok
 			N = true	#now we want to know if there's an operator after the number
 			S = false;# don't care about spaces before this point now
+	else if check(bracket,S[i]):
+			#Treat the entire bracketed segment as a number
+			If  N and S:			
+				return invalid expression
+			If 	O: #last thing was an operator
+				O = false #there is now a number after the operator, we are ok
+			N = true	#now we want to know if there's an operator after the number
+			S = false;# don't care about spaces before this point now
+			#but evaluate the validity of the bracketed space recursively
+			int end = brackClose(S[i:length(S)-1]) #calculate the end of the bracket stack
+			carry = expChk(S[i:end]) #recursively evaluate the validity of the expression
+			#forward the index to the end of the bracketed region
+			i = end
