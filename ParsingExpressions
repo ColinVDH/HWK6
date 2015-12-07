@@ -58,19 +58,29 @@ If S[length(s)-1] is ‘-‘,’+’,’*’ or ‘/’:
 
 •	Step 2 function for expression checking:
 At this point we assume there was no invalid characters and brackets match.
-S = “some expression with valid characters and closed brackets”
-Boolean O = operator flag, false initially
-Boolean N = number flag, false initially
-Boolean S = space flag, false initially
-Boolean B = bracket flag, false initially #for checking empty brackets with no numbers i.e. ((())) is not valid
 
-For int i = 0, i < len(S),i++:
-If check(ops,S[i]):
-	If O and not(S[i]==’-‘): #two operators in a row and not *- , /-,+- or --
-		Return invalid expression
+S = “some expression with valid characters and closed brackets”
+
+expChk(S):
+	Boolean O = operator flag, false initially #unresolve operator flag
+	Boolean N = number flag, false initially
+	Boolean S = space flag, false initially
+
+
+	For int i = 0, i < len(S),i++:
+	#This code should use the flags to verify current character in relation to what came before it
+	If check(ops,S[i]):
+		If O and not(S[i]==’-‘): #two operators in a row and not *- , /-,+- or --
+			Return invalid expression
 		N = false; #there is now an operator after the number, so we are ok
 		O = true; #operator flag on
-If check(digit,S[i]):
-	# if the last thing encountered was a number,with or without brackets and spaces in between,but with no operator in between.
-	If  N and S:			
-		return invalid expression
+		S = false;# dont care about spaces before this point now
+			
+	If check(digit,S[i]):
+			# if the last thing encountered was a number,with or without brackets and spaces in between,but with no operator in between.
+			If  N and S:			
+				return invalid expression
+			If 	O: #last thing was an operator
+				O = false #there is now a number after the operator, we are ok
+			N = true	#now we want to know if there's an operator after the number
+			S = false;# don't care about spaces before this point now
