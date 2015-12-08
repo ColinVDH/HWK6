@@ -86,32 +86,83 @@ boolean expChk(S):
 	Boolean carry = true #used for recursive calls	
 
 	For int i = 0, i < len(S),i++:
-	#This code should use the flags to verify current character in relation to what came before it
-	If check(ops,S[i]):
-		If O and not(S[i]==’-‘): #two operators in a row and not *- , /-,+- or --
-			Return invalid expression
-		N = false; #there is now an operator after the number, so we are ok
-		O = true; #operator flag on
-		S = false;# dont care about spaces before this point now
-			
-	else If check(digit,S[i]):
-			# if the last thing encountered was a number,with or without brackets and spaces in between,but with no operator in between.
-			If  N and S:			
-				return invalid expression
-			If 	O: #last thing was an operator
-				O = false #there is now a number after the operator, we are ok
-			N = true	#now we want to know if there's an operator after the number
-			S = false;# don't care about spaces before this point now
-	else if check(bracket,S[i]):
-			#Treat the entire bracketed segment as a number
-			If  N and S:			
-				return invalid expression
-			If 	O: #last thing was an operator
-				O = false #there is now a number after the operator, we are ok
-			N = true	#now we want to know if there's an operator after the number
-			S = false;# don't care about spaces before this point now
-			#but evaluate the validity of the bracketed space recursively
-			int end = brackClose(S[i:length(S)-1]) #calculate the end of the bracket stack
-			carry = expChk(S[i:end]) #recursively evaluate the validity of the expression
-			#forward the index to the end of the bracketed region
-			i = end
+		#This code should use the flags to verify current character in relation to what came before it
+		If check(ops,S[i]):
+			If O and not(S[i]==’-‘): #two operators in a row and not *- , /-,+- or --
+				Return false
+			N = false; #there is now an operator after the number, so we are ok
+			O = true; #operator flag on
+			S = false;# dont care about spaces before this point now
+				
+		else If check(digit,S[i]):
+				# if the last thing encountered was a number,with or without brackets and spaces in between,but with no operator in between.
+				If  N and S:			
+					return false
+				If 	O: #last thing was an operator
+					O = false #there is now a number after the operator, we are ok
+				N = true	#now we want to know if there's an operator after the number
+				S = false;# don't care about spaces before this point now
+		else if check(bracket,S[i]):
+				#Treat the entire bracketed segment as a number
+				If  N and S:			
+					return false
+				If 	O: #last thing was an operator
+					O = false #there is now a number after the operator, we are ok
+				N = true	#now we want to know if there's an operator after the number
+				S = false;# don't care about spaces before this point now
+				
+				#but evaluate the validity of the bracketed space recursively
+				
+				int end = brackClose(S[i:length(S)-1]) #calculate the end of the bracket stack
+				carry = expChk(S[i:end]) #recursively evaluate the validity of the expression
+				#forward the index to the end of the bracketed region
+				i = end
+		else: #must be a space, turn space flag on
+				S = true
+	return (true and carry)	
+
+•	Step 3:
+(The robustness required for this step is depended on the answer i get for my question 
+at https://piazza.com/class/ie61ukjk2cf25y?cid=233)
+Now that we finally have a truely valid expression, we can begin parsing it
+#Utility Function strips whitespaces and excess brackets
+String form(String S):
+	Boolean B = false #used for bracket adding
+	String result = ""
+	for int i = 0; i<length(S);i++:
+		if S[i] is ' ':#if space
+			result += '' #add nothing
+		else if B and i>0 and check(ops,S[i-1]) and :
+			result += S[i]
+	
+	return strip(result) # might as well get rid of excess brackets here
+
+#This function should be a STATIC METHOD in the expression class and called by the constructor on the left side and right side
+which are passed as strings to the constructor
+
+Expression parse(String S):
+	S = form(S)
+	int opIndex = 0 #Index of the first highest order OP
+	int bLevel #we're only interested in operators OUTSIDE of brackets
+	#loop through characters
+	for int i = 0;i<length(S);i++:
+		If S[i] is ‘(’ :
+		bLevel +=1 #Bracket level increased
+		If S[i] is ‘)’:
+		bLevel -= 1 #Bracket level decreased
+		#look for OPs
+		if bLevel == 0 and check(ops,S[i]):#outside of brackets and found an operator
+			if (BEDMAS(S[i]) > BEDMAS[opIndex]): #if the new operator is of higher order
+				opIndex = i
+	#left side is everything left of the opindex
+	ls = S[0:opIndex-1]
+	#right side is everything right of the opIndex
+	rs = S[opIndex+1:length(S)-1]
+	
+	#now call the corresponding constructor based on the OPERATOR
+	if S[opIndex] == '+':
+		return Addition(ls,rs) #or however the constructor is supposed to be called
+	else if S[opIndex] == '-':
+		
+	
+		
