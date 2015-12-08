@@ -129,12 +129,17 @@ Now that we finally have a truely valid expression, we can begin parsing it
 String form(String S):
 	Boolean B = false #used for bracket adding
 	String result = ""
+	if S[0] == '-': #if it starts off with a negative
+		B = true
+		result += '(' #add bracket open
 	for int i = 0; i<length(S);i++:
 		if S[i] is ' ':#if space
 			result += '' #add nothing
-		else if B and i>0 and check(ops,S[i-1]) and :
+		else if B and i>0 and not check(digit,S[i]):
+			result += ')'#close the brackets where the number ends
 			result += S[i]
-	
+		else:
+			result += S[i]
 	return strip(result) # might as well get rid of excess brackets here
 
 #This function should be a STATIC METHOD in the expression class and called by the constructor on the left side and right side
@@ -163,6 +168,10 @@ Expression parse(String S):
 	if S[opIndex] == '+':
 		return Addition(ls,rs) #or however the constructor is supposed to be called
 	else if S[opIndex] == '-':
-		
+		return Subtraction(ls,rs) #or however the constructor is supposed to be called
+	else if S[opIndex] == '-':
+		return Multiplication(ls,rs) #or however the constructor is supposed to be called
+	else if S[opIndex] == '-':
+		return Division(ls,rs) #or however the constructor is supposed to be called
 	
 		
