@@ -90,7 +90,7 @@ boolean expChk(S):
 	For int i = 0, i < len(S),i++:
 		#This code should use the flags to verify current character in relation to what came before it
 		If check(ops,S[i]):
-			If O and not(S[i]==’-‘): #two operators in a row and not *- , /-,+- or --
+			If O: #two operators in a row 
 				Return false
 			N = false; #there is now an operator after the number, so we are ok
 			O = true; #operator flag on
