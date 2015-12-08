@@ -1,3 +1,5 @@
+https://piazza.com/class/ie61ukjk2cf25y?cid=233
+
 Expression Parsing:
 Theorem 1:
 Each operator reduces two numbers to 1, thus there should always be N-1 operators, no matter the arrangement of brackets. (Piazza said implicit multiplication with ()() will not occur)
