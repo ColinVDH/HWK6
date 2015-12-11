@@ -9,11 +9,8 @@ class Addition: public ArithmeticExpression {
 private:
 
 public:
-	 string leftstring;
-	 string rightstring;
-	 bool leaf;
 	Addition(string ls, string rs, bool leaf);
-	virtual double evaluate();
-	virtual void print();
+	double evaluate();
+	void print();
 
 };

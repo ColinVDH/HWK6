@@ -5,5 +5,10 @@
 using namespace std;
 
 
-Expression::Expression(){}
+double Expression::evaluate(){
+	return 0.0;
+}
+
+void Expression::print(){
+}
 

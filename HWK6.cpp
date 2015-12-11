@@ -4,6 +4,8 @@
 #include "Addition.h"
 using namespace std;
 
+
+
 char brackets[] = { '(', ')' };
 char ops[] = { '-', '+', '*', '/' };
 char digit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -78,7 +80,7 @@ void parse(string S, string &ls, char &op, string &rs) {
 	op = S[opIndex];
 }
 
-Expression* makeRoot(string &user_input) {
+ArithmeticExpression* makeRoot(string &user_input) {
 	string ls(""), rs("");
 	char op('0');
 	parse(user_input, ls, op, rs);      //parse initial expression
@@ -90,7 +92,7 @@ Expression* makeRoot(string &user_input) {
 	return root;
 
 }
-void makeTree(Expression* RootExpression, bool left) { //recursive function to build the Expression tree.
+void makeTree(ArithmeticExpression* RootExpression, bool left) { //recursive function to build the Expression tree.
 	string ls(""), rs("");
 	char op('0');
 	if (RootExpression->leaf == true) {
@@ -100,9 +102,10 @@ void makeTree(Expression* RootExpression, bool left) { //recursive function to b
 
 		else parse(RootExpression->rightstring, ls, op, rs);
 
-		Addition *Child = new Addition(ls, rs, false);
+
 		if (op == '+')
 			Addition *Child = new Addition(ls, rs, false);
+
 
 		if (left)
 			RootExpression->left=Child; //pointer to the evaluate function of the child
@@ -127,5 +130,3 @@ int main() {
 	}
 	return 0;
 }
-
-
