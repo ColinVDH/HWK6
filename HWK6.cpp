@@ -84,7 +84,57 @@ bool validForm(string S){
     }
     return true;
 }
-  
+ 
+ bool expCheck(string S){
+    S = strip(S);
+    
+    bool O = false;
+    bool N = false;
+    bool Sp = false;
+    bool carry = true;
+    for (int i = 0; i < S.length(); i++){
+        
+        if (check(ops,S[i])){
+
+            if (O){
+                return false;
+            }
+            N = false;
+            O = true;
+            Sp = false;
+        }
+        else if(check(digit,S[i])){
+
+            if (N && Sp){
+                return false;
+            }
+            if (O){
+                O = false;
+            }
+            N = true;
+            Sp = false;
+        }
+        else if(check(brackets,S[i])){
+
+            if (N && Sp){
+                return false;
+            }
+            if (O){
+                O = false;
+            }
+            N = true;
+            Sp = false;
+            int end = brackClose(S.substr(i, S.length() - 1));
+            carry = expCheck(S.substr(i, end));
+            i = ++end;
+        }else{
+            Sp = true;
+        }
+        cout << O << " "<< N << " "<< Sp << endl;
+    }
+    return (true && carry);
+}
+
    
 
 
