@@ -5,10 +5,9 @@
 using namespace std;
 
 
-
-char brackets[] = { '(', ')' };
-char ops[] = { '-', '+', '*', '/' };
-char digit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+char brackets[2] = { '(', ')' };
+char ops[4] = { '-', '+', '*', '/' };
+char digit[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
 void form(string &str) {
 	stringstream trimmer;
@@ -26,7 +25,7 @@ int BEDMAS(char c) { //returns order of BEDMAS (1 if * or /, 0 if + or -
 }
 
 bool check(char a[], char c) {
-	for (int i = 0; i < (sizeof(a) / sizeof(a[0])); i++) {
+	for (int i = 0; i < (sizeof(a)); i++) {
 		if (a[i] == c) {
 			return true;
 		}
@@ -55,6 +54,39 @@ string strip(string S) {
 	}
 	return S;
 }
+
+bool validForm(string S){
+    S = strip(S);
+    int br = 0;
+    for (int i = 0; i < S.length(); i++){
+        if((!check(ops,S[i])) && (!check(digit,S[i])) && (!check(brackets,S[i])) && (!(S[i]==' '))){
+            return false;
+        }
+            
+        
+        if (S[i] == '('){
+            br++;
+        }else if (S[i] == ')'){
+            br--;
+        }
+    }
+    if (!(br == 0 )){
+        return false;
+    }
+    //First Character checks:
+    if ((S[0] == '+') || (S[0] == '*') || (S[0] == '/')){
+        return false;
+    }
+    
+    //Last Character Check:
+    if ((S[S.length()-1] == '-') || (S[S.length()-1] == '+') || (S[S.length()-1] == '*') || (S[S.length()-1] == '/')){
+        return false;
+    }
+    return true;
+}
+  
+   
+
 
 void parse(string S, string &ls, char &op, string &rs) {
 	form(S);
