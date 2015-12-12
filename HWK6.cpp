@@ -134,13 +134,16 @@ bool expCheck(string str){
             sub = S.substr(i, end+1);
 
             carry = validForm(sub) && expCheck(sub);
+            if (!carry){
+                return false;
+            }
             i = end+i;
         }else{
             Sp = true;
         }
         cout << O << " "<< N << " "<< Sp << endl;
     }
-    return (true && carry);
+    return true;
 }
 
    
