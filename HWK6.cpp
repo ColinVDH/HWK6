@@ -133,7 +133,7 @@ bool expCheck(string str){
             int end = brackClose(sub);
             sub = S.substr(i, end+1);
 
-            carry = expCheck(sub);
+            carry = validForm(sub) && expCheck(sub);
             i = end+i;
         }else{
             Sp = true;
