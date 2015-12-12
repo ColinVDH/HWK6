@@ -25,7 +25,7 @@ int BEDMAS(char c) { //returns order of BEDMAS (1 if * or /, 0 if + or -
 }
 
 bool check(const char a[], char c) {
-	int i = 0;
+	int i = 0;// index variable
 	while (!(a[i]=='\0')){
 	    if (a[i] == c){
 	        return true;
@@ -70,6 +70,9 @@ bool validForm(string S){
             br++;
         }else if (S[i] == ')'){
             br--;
+        }
+        if (br < 0){
+        	return false;
         }
     }
     if (!(br == 0 )){
