@@ -5,9 +5,9 @@
 using namespace std;
 
 
-char brackets[2] = { '(', ')' };
-char ops[4] = { '-', '+', '*', '/' };
-char digit[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+char brackets[] = { '(', ')','\0' };
+char ops[] = { '-', '+', '*', '/','\0' };
+char digit[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ,'\0'};
 
 void form(string &str) {
 	stringstream trimmer;
@@ -24,11 +24,13 @@ int BEDMAS(char c) { //returns order of BEDMAS (1 if * or /, 0 if + or -
 	return -1; // not an operator
 }
 
-bool check(char a[], char c) {
-	for (int i = 0; i < (sizeof(a)); i++) {
-		if (a[i] == c) {
-			return true;
-		}
+bool check(const char a[], char c) {
+	int i = 0;
+	while (!(a[i]=='\0')){
+	    if (a[i] == c){
+	        return true;
+	    }
+	    i++;
 	}
 	return false;
 }
@@ -84,9 +86,9 @@ bool validForm(string S){
     }
     return true;
 }
- 
- bool expCheck(string S){
-    S = strip(S);
+
+bool expCheck(string str){
+    string S = strip(str);
     
     bool O = false;
     bool N = false;
@@ -95,7 +97,7 @@ bool validForm(string S){
     for (int i = 0; i < S.length(); i++){
         
         if (check(ops,S[i])){
-
+        
             if (O){
                 return false;
             }
@@ -116,7 +118,8 @@ bool validForm(string S){
         }
         else if(check(brackets,S[i])){
 
-            if (N && Sp){
+            if (N){
+                
                 return false;
             }
             if (O){
@@ -124,9 +127,14 @@ bool validForm(string S){
             }
             N = true;
             Sp = false;
-            int end = brackClose(S.substr(i, S.length() - 1));
-            carry = expCheck(S.substr(i, end));
-            i = ++end;
+
+            string sub = S.substr(i);
+
+            int end = brackClose(sub);
+            sub = S.substr(i, end+1);
+
+            carry = expCheck(sub);
+            i = end+i;
         }else{
             Sp = true;
         }
@@ -135,6 +143,7 @@ bool validForm(string S){
     return (true && carry);
 }
 
+   
    
 
 
