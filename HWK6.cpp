@@ -18,31 +18,31 @@ void form(string &str) {
 
 int BEDMAS(char c) { //returns order of BEDMAS (1 if * or /, 0 if + or -
 	for (int i = 0; i < 4; i++) { //4 operators
-		if (c == ops[i])
-			return i / 2;
+		if (c == ops[i])//if ops match
+			return i / 2;//integer division group ops into tiers with 2 on each tier based on order
 	}
 	return -1; // not an operator
 }
 
 bool check(const char a[], char c) {
 	int i = 0;// index variable
-	while (!(a[i]=='\0')){
-	    if (a[i] == c){
-	        return true;
+	while (!(a[i]=='\0')){//while the array has not ended
+	    if (a[i] == c){//if character was found
+	        return true;//then it is in the array
 	    }
-	    i++;
+	    i++;//index increase
 	}
-	return false;
+	return false;//not found, not in the array
 }
 
 int brackClose(string S) {
-	int stack = 0;
-	for (int i = 0; i < S.length(); i++) {
-		if (S[i] == '(')
+	int stack = 0;//bracket stack counter
+	for (int i = 0; i < S.length(); i++) {//iterates through the characters
+		if (S[i] == '(')//open bracket
 			stack += 1; //Bracket level increased
-		if (S[i] == ')') {
+		if (S[i] == ')') {//close bracket
 			stack -= 1; //Bracket level decreased
-			if (stack == 0)
+			if (stack == 0)//entire stack of brackets cleared
 				return i; //returns the index at which the entire bracket stack was cleared
 		}
 	}
@@ -51,102 +51,106 @@ int brackClose(string S) {
 
 //This function strips away the outer brackets of an expression, i.e. ((((((3+4)))))) becomes 3+4
 string strip(string S) {
-	while ((S[0] == '(') && (brackClose(S) == S.length() - 1)) {
-		S = S.substr(1, S.length() - 2); //inclusive
+	while ((S[0] == '(') && (brackClose(S) == S.length() - 1)) {//while there are still outer brackets left
+		S = S.substr(1, S.length() - 2); //remove first and last character
 	}
-	return S;
+	return S;//return stripped expression
 }
 
-bool validForm(string S){
-    S = strip(S);
-    int br = 0;
-    for (int i = 0; i < S.length(); i++){
-        if((!check(ops,S[i])) && (!check(digit,S[i])) && (!check(brackets,S[i])) && (!(S[i]==' '))){
-            return false;
+bool validForm(string S){//checks if this expression contains valid characters and begins and ends with a number (- sign exception for beginning)
+    S = strip(S);//removes exccess brackets
+    int br = 0;//bracket stack counter
+    for (int i = 0; i < S.length(); i++){//iterates through characters
+        if((!check(ops,S[i])) && (!check(digit,S[i])) && (!check(brackets,S[i])) && (!(S[i]==' '))){//see if the character is within valid character sets
+            return false;//if a non valid character was found, expression is bad
         }
             
         
-        if (S[i] == '('){
-            br++;
-        }else if (S[i] == ')'){
-            br--;
+        if (S[i] == '('){//if open bracket
+            br++;//bracket level increase
+        }else if (S[i] == ')'){//if close bracket
+            br--;//bracket level decrease
         }
-        if (br < 0){
-        	return false;
+        if (br < 0){//bracket level should not go below 0
+        	return false;//if so, then the expression is an invalid one
         }
     }
-    if (!(br == 0 )){
-        return false;
+    if (!(br == 0 )){//if bracket stack is not 0 at the end of the expression
+        return false;//invalid expression
     }
     //First Character checks:
-    if ((S[0] == '+') || (S[0] == '*') || (S[0] == '/')){
-        return false;
+    if ((S[0] == '+') || (S[0] == '*') || (S[0] == '/')){//if fist character is an operator and not a '-'
+        return false;//invalid expression
     }
     
     //Last Character Check:
-    if ((S[S.length()-1] == '-') || (S[S.length()-1] == '+') || (S[S.length()-1] == '*') || (S[S.length()-1] == '/')){
-        return false;
+    if ((S[S.length()-1] == '-') || (S[S.length()-1] == '+') || (S[S.length()-1] == '*') || (S[S.length()-1] == '/')){//last character is an operator of any kind
+        return false;//invalid expression
     }
-    return true;
+    return true;//all tests passed, valid expression
 }
 
-bool expCheck(string str){
+bool expCheck(string str){//now checks the expression for operator number coherency
     string S = strip(str);
     
-    bool O = false;
-    bool N = false;
-    bool Sp = false;
-    bool carry = true;
-    for (int i = 0; i < S.length(); i++){
-        
+    bool O = false;//flag for operator encountered 
+    bool N = false;//flag for number encountered
+    bool Sp = false; //flag for space encountered
+    bool carry = true;//boolean for recursion
+    for (int i = 0; i < S.length(); i++){//iterates through characters
+        //if an operator is encountered
         if (check(ops,S[i])){
-        
+        	//and a previous operator was encountered with no numbers in between
             if (O){
-                return false;
+                return false;//this is a expression is not valid
             }
-            N = false;
+            //if an operator is encountered, turn the encountered number flag off, as there is now an operator between
+            //it and the next number.
+            N = false; 
+		//operator was encountered, turn operator flag on
             O = true;
-            Sp = false;
+            Sp = false;//if previous tests passed, we dont care about the last encountered space anymore
         }
+        //if a digit was encountered
         else if(check(digit,S[i])){
-
+		//last encountered a digit with a space between it and this digit
             if (N && Sp){
-                return false;
+                return false; //this expression is invalid
             }
-            if (O){
-                O = false;
+            if (O){//if an operator was encountered
+                O = false;//there is now a number between this operator and whatever comes next, so operator flag is off
             }
-            N = true;
-            Sp = false;
+            N = true;//we encountered a number
+            Sp = false;//we dont care about spaces if all previous tests were passed
         }
+        //encountered a bracket,treat bracket set and its content as a number for validity checking
         else if(check(brackets,S[i])){
-
+		//if a number was previously encountered with no operator in between	
             if (N){
-                
+                //this expression is invalid (implicit multiplication is not enforced in this program)
                 return false;
             }
-            if (O){
-                O = false;
+            if (O){//if operator was encountered
+                O = false;//operator now has a numeric value following it, flag turned off
             }
-            N = true;
-            Sp = false;
+            N = true;//numeric value encountered
+            Sp = false;//dont care about spaces anymore
 
-            string sub = S.substr(i);
+            string sub = S.substr(i);//creates a substring from current position to end
 
-            int end = brackClose(sub);
-            sub = S.substr(i, end+1);
+            int end = brackClose(sub);//calculates the distance to the bracket that closes the entire stack contained within
+            sub = S.substr(i, end+1);//creates a substring with the content of the bracket
 
-            carry = validForm(sub) && expCheck(sub);
-            if (!carry){
-                return false;
+            carry = validForm(sub) && expCheck(sub);//checks contents of the bracket as if it was an expression on its own
+            if (!carry){//if tests returns false
+                return false;//invalid expression
             }
-            i = end+i;
-        }else{
-            Sp = true;
+            i = end+i;//forwards the index to beyond the end of the closing bracket
+        }else{//must be space encountered
+            Sp = true;//space flag on
         }
-        cout << O << " "<< N << " "<< Sp << endl;
     }
-    return true;
+    return true;//all tests passed, valid expression
 }
 
    
