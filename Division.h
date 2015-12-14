@@ -2,7 +2,7 @@
 *Name: Junhao Wang, Colin Vandenhof, Teshaun Murray
 *MacID: wangjh2, vandencm, murrayts
 *Student Number: 1215428, 1231644, 1227515
-*Description: addition class header.
+*Description: division class header.
 */
 #include <string>
 #include <iostream>
@@ -10,13 +10,14 @@
 using namespace std;
 
 
-//Adds two expression
-class Addition: public ArithmeticExpression {
+//Divides two expression
+class Division: public ArithmeticExpression {
 private:
 public:
-	Addition(string ls, string rs, string branch="");//declare constructor, branch initialized to empty string by default.
-	~Addition(); //declare destructor
+	Division(string ls, string rs, string branch="");//declare constructor, branch initialized to empty string by default.
+	~Division(); //declare destructor
 	string evaluate(); //declare evaluate function
 	void print();//declare print function
+
 
 };

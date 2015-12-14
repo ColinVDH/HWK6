@@ -2,7 +2,7 @@
 *Name: Junhao Wang, Colin Vandenhof, Teshaun Murray
 *MacID: wangjh2, vandencm, murrayts
 *Student Number: 1215428, 1231644, 1227515
-*Description: addition class header.
+*Description: multiplication class header.
 */
 #include <string>
 #include <iostream>
@@ -10,12 +10,12 @@
 using namespace std;
 
 
-//Adds two expression
-class Addition: public ArithmeticExpression {
+//Multiplies two expression
+class Multiplication: public ArithmeticExpression {
 private:
 public:
-	Addition(string ls, string rs, string branch="");//declare constructor, branch initialized to empty string by default.
-	~Addition(); //declare destructor
+	Multiplication(string ls, string rs, string branch=""); //declare constructor, branch initialized to empty string by default.
+	~Multiplication(); //declare destructor
 	string evaluate(); //declare evaluate function
 	void print();//declare print function
 
