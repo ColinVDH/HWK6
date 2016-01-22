@@ -70,19 +70,31 @@ void strip(string &S) {
 		S = S.substr(1, new_len); //inclusive
 	}
 }
+
+bool isNumber(const char* str) {
+	char* endptr = 0; //end pointer is initialized to 0
+	strtod(str, &endptr);  //string to double function
+	if (*endptr != '\0' || endptr == str) //if end pointer does not equal end character OR endpointer is set to the original string, this indicates the function has failed to convert.
+		return false;//return that it is not a number
+	return true; //else, it is a number.
+}
+
 //This function checks if this expression contains valid characters and begins and ends with a number (- sign exception for beginning)
 bool validForm(string S){
-    strip(S);//removes excess brackets
+	if ((S[0]=='(')&&(S[S.length()-1]==')')&&(brackClose(S))){
+		strip(S);
+		if (isNumber(S.c_str())) return true;
+	}
+
+	strip(S);//removes excess brackets
     int br = 0;//bracket stack counter
-    int op=0; //operator counter
+
     string number;
     for (int i = 0; i < S.length(); i++){//iterates through characters
         if((!check(ops,S[i])) && (!check(digit,S[i])) && (!check(brackets,S[i])) && (!(S[i]==' '))){//see if the character is within valid character sets
             return false;//if a non valid character was found, expression is bad
         }
-        if (check(ops, S[i])){ //if operator encountered
-        	op+=1; //add to operator counter
-        }
+
         if (S[i] == '('){//if open bracket
             br++;//bracket level increase
         }else if (S[i] == ')'){//if close bracket
@@ -95,13 +107,9 @@ bool validForm(string S){
     if (!(br == 0 )){//if bracket stack is not 0 at the end of the expression
         return false;//invalid expression
     }
-    //operator check
-    if (op==0){ // if no operators, it is invalid expression
-    	return false;
-    }
 
     //First Character checks:
-    if ((S[0] == '+') || (S[0] == '*') || (S[0] == '/')){//if first character is an operator
+    if ((S[0] == '+') || (S[0] == '*') || (S[0] == '/') || (S[0] == '-') ){//if first character is an operator
         return false;//invalid expression
     }
 
